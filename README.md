@@ -19,6 +19,19 @@ What better way to learn a programming language than building a HTTP server :D. 
 
 **syscalls** help processes communicate with a kernel.
 
+HTTP Request structure:
+
+```http
+GET /index.html HTTP/1.1\r\n
+Host: localhost:3490\r\n
+User-Agent: curl/7.64.1\r\n
+Accept: *//*\r\n
+Content-Type: text/plain\r\n
+Content-Length: 3\r\n
+\r\n
+{{ request body empty }}
+```
+
 ### Making a skeleton server
 
 1. Setting up the `addrinfo` struct for hints

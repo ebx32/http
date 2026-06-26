@@ -1,5 +1,6 @@
 #include <arpa/inet.h>
 #include <asm-generic/socket.h>
+#include <assert.h>
 #include <bits/types.h>
 #include <err.h>
 #include <netdb.h>
@@ -8,8 +9,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #define PORT "3490"
 #define BACKLOGS 10
@@ -21,6 +24,7 @@ struct HttpHeader {
   char *value;
 };
 
+// response bode
 struct Bstring {
   char *data;
   size_t length;
@@ -44,9 +48,13 @@ struct HttpRequest {
   struct Bstring *body;
 };
 
-void parse_request() {
-  
-}
+struct Bstring bstring_init() {
+
+};
+
+struct Bstring bstring_append() {
+
+};
 
 void parse_headers(char *parse_buffer, struct HttpRequest *req) {
   req->headers = malloc(sizeof(struct HttpHeader) * MAX_HEADERS);
@@ -72,13 +80,21 @@ void parse_headers(char *parse_buffer, struct HttpRequest *req) {
   }
 }
 
-void parse_body() {
-  
+char* http_get_header(struct HttpRequest *req, char *header) {
+  assert(req != NULL);
+  assert(header != NULL);
+
+  for (size_t i = 0; i < req->headers_len; ++i){
+    if (strcasecmp(header, req->headers[i].key) == 0) {
+      return req->headers[i].value;
+    }
+  }
+  return NULL;
 }
 
 void handle_client(int client_fd) {
-
   char request_buffer[BUFF_SIZE];
+  size_t content_length = 0;
 
   // recieve HTTP request
   ssize_t bytes_recvd = recv(client_fd, request_buffer, BUFF_SIZE - 1, 0);
@@ -107,10 +123,42 @@ void handle_client(int client_fd) {
   // parse headers
   parse_headers(parse_buffer, &req);
 
-  // get 'Content-Length' header and parse_body();
-  
+  // get content-length
+  char *content_length_header = http_get_header(&req, "content-length");
+  if (content_length_header != NULL) {
+    content_length = strtol(content_length_header, NULL, 10);
+  }
+  printf("%d\n", (int)content_length);
 
-  // send response
+  // send reponse
+  if (strcmp(req.path, "/") == 0) {
+    const char response[] = "HTTP/1.1 200 OK\r\n\r\n";
+    send(client_fd, response, strlen(response), 0);
+  } else if (strcmp(req.path, "/user-agent") == 0) {
+    int bytes_sent = -1;
+    // return User-Agent in reponse body
+    char *user_agent = http_get_header(&req, "user-agent");
+    if (user_agent == NULL){
+      user_agent = "NULL";
+    }
+
+    char *response = malloc(BUFF_SIZE);
+    sprintf(response,
+            "HTTP/1.1 200 OK\r\n"
+            "Content-Type: text/plain\r\n"
+            "Content-Length:%zu\r\n\r\n"
+            "%s",
+            strlen(user_agent), user_agent);
+    bytes_sent = send(client_fd, response, strlen(response), 0);
+    printf("%d\n", bytes_sent);
+    free(response);
+  // send webpages
+  } else if (strcmp(req.path, "/index.html") == 0) {
+    FILE *fd = fopen("public/index.html", "r");
+    if (fd == NULL) {
+      FILE *not_found = fopen("public/404.html", "r");
+    }
+  }
 
   free(req.headers);
   close(client_fd);
@@ -129,12 +177,14 @@ int main() {
   hints.ai_socktype = SOCK_STREAM;
   hints.ai_flags = AI_PASSIVE;
 
+  // get address info
   int gai = getaddrinfo(NULL, PORT, &hints, &res);
   if (gai != 0) {
     fprintf(stderr, "%s\n", gai_strerror(gai));
     return 1;
   }
 
+  // create socket
   sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
   if (sockfd == -1) {
     perror("server: socket");
@@ -142,6 +192,7 @@ int main() {
     return 1;
   }
 
+  // prevents 'Address already in use' errors
   if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
     perror("server: setsockopt");
     freeaddrinfo(res);
@@ -149,6 +200,7 @@ int main() {
     return 1;
   }
 
+  // bind socket
   if (bind(sockfd, res->ai_addr, res->ai_addrlen) == -1) {
     perror("server: bind");
     freeaddrinfo(res);
@@ -158,12 +210,14 @@ int main() {
 
   freeaddrinfo(res);
 
+  // listen for incoming connection requests
   if (listen(sockfd, BACKLOGS) == -1) {
     perror("server: listen");
     close(sockfd);
   }
 
   while (1) {
+    // accept client connection
     socklen_t addr_len = sizeof(client_addr);
     client_fd = accept(sockfd, (struct sockaddr *)&client_addr, &addr_len);
 
@@ -172,7 +226,6 @@ int main() {
       continue;
     }
 
-    // handle_client(client_fd, &client_addr);
     handle_client(client_fd);
   }
 
