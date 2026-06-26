@@ -1,4 +1,4 @@
-# Dope HTTP Server (WIP)
+# HTTP Server (WIP)
 
 ```
  ___________________________________
