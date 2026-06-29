@@ -28,13 +28,6 @@ struct HttpRequest {
     ssize_t _buffer_len;
 };
 
-/* All parsing functions go here
- * public: http_parse_request
- * public: http_get_header (utility function)
- * static: parse_request_line
- * static: parse_headers
- */
-
 void http_parse_request(char *request_buffer, struct HttpRequest *req);
 char* http_get_header(struct HttpRequest *req, const char *header);
 

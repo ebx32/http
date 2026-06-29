@@ -1,31 +1,14 @@
 # HTTP Server (WIP)
 
-```
- ___________________________________
-< i'm gonna make a http server in C >
- -----------------------------------
-        \   ^__^
-         \  (**)\_______
-            (__)\       )\/\
-             U  ||----w |
-                ||     ||
-```
-
-## Motivation
-
-What better way to learn a programming language than building a HTTP server :D. Too bad I LLM'd my way through my first 3 years of uni, so here's my attempt at actually coding (and learning how to code) without AI. Inspo from LowLevelTV on youtube  and this [reel](https://youtube.com/shorts/5JN7SZ6NETQ?si=BdNJZoFZ6dBhzrzb).
-
-## Development notes
-
 **syscalls** help processes communicate with a kernel.
 
 HTTP Request structure:
 
-```http
+```h
 GET /index.html HTTP/1.1\r\n
 Host: localhost:3490\r\n
 User-Agent: curl/7.64.1\r\n
-Accept: *//*\r\n
+Accept: */*\r\n
 Content-Type: text/plain\r\n
 Content-Length: 3\r\n
 \r\n

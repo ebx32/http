@@ -68,5 +68,3 @@ static void parse_request_headers(char **parse_buffer, struct HttpRequest *req) 
         ++req->headers_len;
     }
 }
-
-
