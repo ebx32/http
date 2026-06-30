@@ -42,7 +42,9 @@ struct addrinfo {
 ```
 ---
 
-#### Note on `sockaddr`
+<details>
+
+<summary>Note on `sockaddr`</summary>
 
 `struct sockaddr` holds socket address information for many types of sockets.
 
@@ -97,6 +99,8 @@ if (their_addr.ss_family == AF_INET) {
     // now use s->sin6_addr, s->sin6_port etc
 }
 ```
+
+</details>
 
 ---
 
@@ -181,73 +185,21 @@ if (client_addr.ss_family == AF_INET) {
 - Beej's Guide to Network Programming Using Internet Sockets ([dope ass book](https://www.beej.us/guide/bgnet/])).
 - The internet
 
-## Checkpoints
+## Checklist
 
-### PZ1: TCP Server
-
-- [x] BSD Sockets API
-- [x] Accept client connections
-- [x] Receive raw HTTP requests
-
-### PZ2: HTTP Parser
-
-- [x] Parse request line
+- [x] Parse HTTP request line
 - [x] Parse request headers
-- [ ] Parse request body (POST)
-- [ ] Header lookup API
-
-### PZ3: Router
-
-- [ ] Route `/`
-- [ ] Route `/echo/<text>`
-- [ ] Route `/user-agent`
-- [ ] Route `/index.html`
-- [ ] Route `/files/<filename>`
-- [ ] Route `/time`
-- [ ] 404 handler
-
-### PZ4: Response
-
-- [ ] HttpResponse struct
-- [ ] Serialize HTTP response
-- [ ] Send HTTP response
-- [ ] Content-Length
-- [ ] Content-Type
-- [ ] Status codes
-
-### PZ5: Static Files
-
-- [ ] Serve HTML
-- [ ] Serve CSS
-- [ ] Serve JavaScript
-- [ ] Serve images
-- [ ] MIME type detection
-- [ ] Prevent directory traversal
-
-### PZ6: HTTP Methods
-
-- [ ] GET
-- [ ] POST
-- [ ] HEAD
-- [ ] DELETE (optional)
-
-### PZ7: Misc.
-
-- [ ] Persistent connections (Keep-Alive)
-- [ ] Chunked transfer encoding
-- [ ] Better error handling
-- [ ] Logging
-
-### PZ8: Performance & Multithreading
-
-- [ ] Thread-per-connection
-- [ ] Thread pool
-- [ ] epoll (Linux)
-- [ ] sendfile()
-- [ ] Radix-tree router (optional)
-
-### PZ9: HTTPS
-
-- [ ] OpenSSL integration
-- [ ] TLS certificates
-- [ ] HTTPS listener
+- [x] Create `get_headers` function
+- [ ] Create `HttpResponse` struct
+- [ ] Implement routing functions to populate `struct HttpResponse` for `GET` requests
+  - [ ] `/`
+  - [ ] `/echo/<text>` for echo server
+  - [ ] `/user-agent`
+  - [ ] Static files `/index.html`, etc.
+  - [ ] `/files/<filename>` for file server
+  - [ ] `/time` to return time
+  - [ ] `404` handler
+- [ ] `Bstring` for response body
+- [ ] Multithread with `pthread_create()`
+- [ ] Logging & error handling
+- [ ] `epoll`
