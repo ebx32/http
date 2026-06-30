@@ -19,6 +19,9 @@ void http_route_request(struct HttpRequest *req, const int client_fd) {
         send_home(client_fd);
     } else if (strcmp(req->path, "/user-agent") == 0) {
         send_user_agent(req, client_fd);
+    } else if (strncmp(req->path, "/echo/", 6) == 0) {
+        char *s = req->path + 6;
+        send_echo(s, client_fd);
     } else if (strcmp(req->path, "/index.html") == 0) {
         send_index(client_fd);
     } else {

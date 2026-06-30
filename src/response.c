@@ -1,3 +1,4 @@
+#include "response.h"
 #include "http.h"
 #include "bstring.h"
 
@@ -11,7 +12,7 @@ void send_home(int client_fd) {
     send(client_fd, response, strlen(response), 0);
 }
 
-void send_user_agent(struct HttpRequest *req, const int client_fd) {
+void send_user_agent(struct HttpRequest *req, int client_fd) {
     int bytes_sent;
 
     char *user_agent = http_get_header(req, "user-agent");
@@ -30,5 +31,18 @@ void send_user_agent(struct HttpRequest *req, const int client_fd) {
             strlen(user_agent), user_agent);
     bytes_sent = send(client_fd, response, strlen(response), 0);
     printf("%d\n", bytes_sent);
+    free(response);
+}
+
+void send_echo(const char *s, int client_fd) {
+    char *response = malloc(BUFF_SIZE);
+
+    sprintf(response,
+        "HTTP/1.1 200 OK\r\n"
+        "Content-Type: text/plain\r\n"
+        "Content-Length:%zu\r\n\r\n"
+        "%s",
+        strlen(s), s);
+    send(client_fd, response, strlen(response), 0);
     free(response);
 }
