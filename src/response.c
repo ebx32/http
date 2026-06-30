@@ -46,3 +46,5 @@ void send_echo(const char *s, int client_fd) {
     send(client_fd, response, strlen(response), 0);
     free(response);
 }
+
+// static functions
