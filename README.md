@@ -156,7 +156,9 @@ bind(sockfd, res->ai_addr, res->ai_addrlen)
 
 ---
 
-#### Retrieving the client's IP address (`inet_pton()` and `inet_ntop()`)
+<details>
+
+<summary> Retrieving the client's IP address (`inet_pton()` and `inet_ntop()`) </summary>
 
 As we know `struct sockaddr_storage` can have an `ss_family` of `AF_INET` or `AF_INET6`. Before we can retrieve the client's IP address, we need to identify what kind of IP address is it. We do this using a conditional check. We can then print the IP address using `inet_ntop()`. This function converts the binary representation of the IP address to a string (number & dots notation / hex and colons notation). This function requires 4 parametes:
 
@@ -179,6 +181,10 @@ if (client_addr.ss_family == AF_INET) {
     printf("Client IPv6 Address: %s\n", ip6);
 }
 ```
+
+</details>
+
+---
 
 ## References
 
