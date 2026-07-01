@@ -22,6 +22,8 @@ struct HttpRequest {
     struct HttpHeader *headers;
     ssize_t headers_len;
 
+    int _content_length;
+
     struct Bstring *body;
 
     char *_buffer;

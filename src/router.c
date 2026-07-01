@@ -3,16 +3,7 @@
 
 #include <netdb.h>
 #include <string.h>
-
-/* ========== SUPPORTED ROUTES ==========
- * /: send_home
- * /echo/<text>: send_echo
- * /index.html: send_index
- * 404: send_404
- * /files/<some_file>: send_file
- * /time: send_time
- * =====================================
- */
+#include <stdio.h>
 
 void http_route_request(struct HttpRequest *req, const int client_fd) {
     if (strcmp(req->path, "/") == 0) {
@@ -23,8 +14,19 @@ void http_route_request(struct HttpRequest *req, const int client_fd) {
         char *s = req->path + 6;
         send_echo(s, client_fd);
     } else if (strcmp(req->path, "/index.html") == 0) {
-        send_index(client_fd);
+        // send_index(client_fd);
+        printf("%s\n", req->path);
+    } else if (strcmp(req->path, "/about.html") == 0) {
+        // send_about();
+        printf("%s\n", req->path);
+    } else if (strncmp(req->path, "/files/", 7) == 0) {
+        // send_file();
+        printf("file\n");
+    } else if (strcmp(req->path, "/time") == 0) {
+        // send_time();
+        printf("time\n");
     } else {
-        send_404(client_fd);
+        // send_404(client_fd);
+        printf("404\n");
     }
 }

@@ -190,6 +190,8 @@ if (client_addr.ss_family == AF_INET) {
 
 - Beej's Guide to Network Programming Using Internet Sockets ([dope ass book](https://www.beej.us/guide/bgnet/])).
 - The internet
+- [MDN: HTTP Messages](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Messages)
+- [MDN: Representation Headers](https://developer.mozilla.org/en-US/docs/Glossary/Representation_header)
 
 ## Checklist
 

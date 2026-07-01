@@ -22,6 +22,11 @@ void http_parse_request(char *request_buffer, struct HttpRequest *req) {
      */
     parse_request_line(&parse_buffer, req);
     parse_request_headers(&parse_buffer, req);
+
+    // char *content_length = http_get_header(req, "Content-Length");
+    // if (content_length == NULL) {
+    //     req->_content_length = strtol();
+    // }
 }
 
 char* http_get_header(struct HttpRequest *req, const char *header) {
